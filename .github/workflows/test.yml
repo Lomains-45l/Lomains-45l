@@ -1,0 +1,39 @@
+{
+  name: Build and Test TypeScript Code,
+  on: [push, pull_request],
+  jobs: {
+    build-and-test: {
+      runs-on: ubuntu-latest,
+      steps: [
+        {
+          uses: actions/checkout@v3,
+          with: {
+            path: '/home/runner/checkouts/$GITHUB_REPOSITORY'
+          }
+        },
+        {
+          uses: actions/setup-node@v3,
+          with: {
+            node-version: '14'
+          }
+        },
+        {
+          run: 'npm install'
+        },
+        {
+          run: 'npm run build'
+        },
+        {
+          run: 'npm run test',
+          env: {
+            CI: 'true'
+          }
+        }
+      ],
+      env: {
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }},
+        NODE_ENV: 'production'
+      }
+    }
+  }
+}
